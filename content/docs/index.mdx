@@ -8,9 +8,12 @@ icon: House
 
 ## The problem: setup gets in the way
 
-You want to see a change on your actual phone. Before you can use hot reload, you need to get a debug build onto it and connect your development tools. That can mean finding a USB cable, enabling developer options, authorizing ADB, or configuring wireless debugging.
+Your test device is often also your everyday phone. The usual Flutter workflow on a physical Android device involves enabling developer options and setting up USB or wireless debugging. The friction comes when you switch between building your app and using your phone normally:
 
-That setup interrupts a simple loop: **change your code, see it on your phone, repeat**.
+- **Turning settings on and off.** Some banking and other everyday apps may restrict access while developer options or USB debugging are enabled. You end up turning them off to use those apps, then back on when you return to development.
+- **Dealing with the cable.** A loose connection or unreliable USB cable can disconnect your debugging session and interrupt your work. Wireless debugging removes the cable, but still requires developer options.
+
+We built Airreload to make developing on your everyday phone simpler: **keep developer options off, leave the cable behind, and keep hot reloading.**
 
 ## Our approach: run, scan, reload
 
@@ -20,7 +23,7 @@ Airreload brings building, installation, and connection into one local workflow:
 2. **Scan with Airreload Go.** Your phone pairs with the computer, the CLI builds a matching APK, and Go downloads it. Approve Android's installation prompt and open your app.
 3. **Keep building.** Airreload connects Flutter to the running app. Edit your code and press `r` to hot reload, or `R` to hot restart. DevTools is available on your computer.
 
-No USB cable, ADB setup, or developer options are needed for this flow. Your computer and phone communicate over the same trusted local network.
+Airreload Go handles pairing and downloading your debug APK, while the CLI connects Flutter to your running app over the same trusted local network. No USB cable, ADB setup, or developer options are needed, so this workflow doesn't require toggling those settings between development and everyday use.
 
 ## Your project, your workflow
 
