@@ -1,0 +1,756 @@
+/* Two separate physical surfaces, connected only by the local network. */
+.air-demo {
+  scroll-margin-top: calc(var(--air-header-height) + 24px);
+  position: relative;
+  margin: 50px 0 0;
+  padding-bottom: 28px;
+}
+.air-demo-stage {
+  --air-phone-scale: 1.05;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 110px 270px;
+  align-items: center;
+}
+.air-computer {
+  transform: scale(var(--air-editor-scale, 1));
+  transform-origin: left center;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Keyboard focus gets the same emphasis without retaining it after a mouse click. */
+.air-demo-stage:has(.air-phone :focus-visible) {
+  --air-phone-pose: rotate(0deg) rotateY(0deg) scale(var(--air-phone-scale));
+  --air-phone-tint: 38%;
+  --air-phone-glow: #b8e5c936;
+  --air-editor-scale: 0.97;
+}
+@media (hover: hover) and (pointer: fine) {
+  /* Keep the untransformed wrapper as a steady target while the phone moves. */
+  .air-demo-stage:has(.air-phone-angle:hover) {
+    --air-phone-pose: rotate(0deg) rotateY(0deg) scale(var(--air-phone-scale));
+    --air-phone-tint: 38%;
+    --air-phone-glow: #b8e5c936;
+    --air-editor-scale: 0.97;
+  }
+}
+@media (min-width: 761px) {
+  .air-demo-stage {
+    --air-phone-scale: 1.12;
+  }
+}
+.air-hardware-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #d0c8ad;
+  font:
+    8px ui-monospace,
+    monospace;
+  letter-spacing: 1.7px;
+  margin-bottom: 18px;
+}
+.air-hardware-label > span {
+  color: #ead08c;
+  font-size: 8px;
+  border: 1px solid #ead08c40;
+  padding: 3px 5px;
+  border-radius: 4px;
+}
+.air-editor-window {
+  border: 1px solid #626151;
+  border-radius: 11px;
+  overflow: hidden;
+  background: #121410;
+  box-shadow:
+    0 12px 40px #0005,
+    0 1px 0 #ffffff1c inset;
+}
+.air-demo-toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  height: 38px;
+  background: #22241d;
+  border-bottom: 1px solid #ffffff0b;
+  color: #a7ab97;
+  font-size: 9px;
+  padding: 0 14px;
+}
+.air-window-dots {
+  display: flex;
+  gap: 5px;
+}
+.air-window-dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ac795b;
+}
+.air-window-dots i:nth-child(2) {
+  background: #b0a169;
+}
+.air-window-dots i:nth-child(3) {
+  background: #81956c;
+}
+
+.air-editor-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 137px;
+  border-right: 1px solid #ffffff0b;
+  border-bottom: 1px solid #d9d7a873;
+  padding: 11px 14px;
+  font:
+    9px ui-monospace,
+    monospace;
+  color: #c6cbb6;
+}
+.air-dart-icon {
+  color: #87c9c8;
+}
+.air-editor-tab > span:last-child {
+  margin-left: auto;
+  color: #d6bb6e;
+  font-size: 8px;
+}
+.air-code {
+  padding: 15px 0;
+  font:
+    10px/1.75 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  overflow-x: auto;
+}
+.air-code > div {
+  display: flex;
+  white-space: pre;
+  min-width: max-content;
+}
+.air-code > div > span {
+  min-width: 36px;
+  text-align: center;
+  color: #737c62;
+  user-select: none;
+}
+.air-code code {
+  color: #c8cdbb;
+  font: inherit;
+  padding-right: 15px;
+}
+.air-code b {
+  color: #c1a6cf;
+  font-weight: 400;
+}
+.air-code em {
+  color: #ced79e;
+  font-style: normal;
+}
+.air-code-highlight {
+  background: #d7dc7620;
+  box-shadow: 2px 0 #e4da8e inset;
+  transition: background 0.3s;
+}
+.is-sending .air-code-highlight {
+  background: #f7c36535;
+}
+.air-terminal {
+  border-top: 1px solid #ffffff10;
+  padding: 10px 16px 13px;
+  font:
+    9px/1.8 ui-monospace,
+    monospace;
+}
+.air-terminal > div {
+  display: flex;
+  justify-content: space-between;
+  color: #89917c;
+  font-size: 7px;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.air-terminal p {
+  margin: 3px 0;
+}
+.air-terminal-prompt {
+  color: #e1d594;
+  margin-right: 6px;
+}
+.air-terminal-muted {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #a2af8f;
+}
+.air-terminal-result {
+  color: #d1d9a9;
+  font-size: 8px;
+  min-height: 15px;
+}
+
+.air-editor-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 15px 16px;
+  background: #1b1e17;
+  border-top: 1px solid #ffffff10;
+}
+.air-debug-action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.air-debug-action button {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 7px;
+  background: #ffffff04;
+  border: 1px solid #ffffff10;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+.air-debug-action button:hover {
+  background: #ffffff0d;
+  border-color: #ffffff30;
+}
+.air-debug-action button:disabled {
+  opacity: 0.45;
+}
+.air-debug-action .air-hot-reload {
+  color: #e9c875;
+}
+.air-debug-action .air-hot-restart {
+  color: #8ccf8c;
+}
+.air-debug-action strong {
+  display: block;
+  color: #d1d7c1;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+.air-debug-action div > span {
+  display: block;
+  color: #9fa98a;
+  font-size: 8px;
+  line-height: 1.7;
+  margin-top: 2px;
+}
+.air-reload-flash {
+  animation: air-flash 0.6s ease-in-out 2;
+}
+@keyframes air-flash {
+  50% {
+    opacity: 0.35;
+    filter: drop-shadow(0 0 5px #e9c875);
+  }
+}
+.is-restarting .air-phone-app {
+  opacity: 0.25;
+}
+.air-phone-app {
+  transition: opacity 0.3s;
+}
+.air-tap-counter button:disabled {
+  opacity: 0.4;
+  cursor: wait;
+}
+@media (max-width: 1050px) and (min-width: 761px), (max-width: 390px) {
+  .air-editor-controls {
+    gap: 10px;
+    padding: 12px;
+  }
+  .air-debug-action {
+    gap: 7px;
+  }
+  .air-debug-action button {
+    width: 36px;
+    height: 40px;
+  }
+  .air-debug-action strong {
+    font-size: 8px;
+  }
+  .air-debug-action div > span {
+    font-size: 7px;
+  }
+}
+@media (max-width: 350px) {
+  .air-editor-controls {
+    grid-template-columns: 1fr;
+  }
+  .air-debug-action strong {
+    font-size: 10px;
+  }
+  .air-debug-action div > span {
+    font-size: 8px;
+  }
+}
+.air-wireless {
+  align-self: center;
+  color: #e0c286;
+  text-align: center;
+  transform: translateY(17px);
+}
+.air-wireless-track {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 44px;
+}
+.air-wireless-track::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    #f0d39470 0 3px,
+    transparent 3px 7px
+  );
+}
+.air-wifi-node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #e5c78535;
+  border-radius: 50%;
+  background: #34301e;
+  box-shadow: 0 0 20px #e4a64412;
+}
+.air-wireless > span {
+  display: block;
+  margin-top: 12px;
+  font:
+    6px ui-monospace,
+    monospace;
+  letter-spacing: 1px;
+}
+.air-data-packet {
+  position: absolute;
+  left: 0;
+  top: 20px;
+  width: 7px;
+  height: 4px;
+  background: #ffe5a5;
+  border-radius: 5px;
+  box-shadow: 0 0 12px 3px #ffb54b85;
+  opacity: 0;
+}
+.is-sending .air-data-packet {
+  animation: air-transmit 0.6s ease-in-out 2;
+}
+.is-sending .air-wifi-node {
+  color: #fff1bd;
+  border-color: #ffe4a2a0;
+  box-shadow: 0 0 22px #ffc85b35;
+}
+@keyframes air-transmit {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+.air-device-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.air-device-preview .air-hardware-label {
+  margin-bottom: 24px;
+  font-size: 7px;
+  letter-spacing: 1.2px;
+}
+.air-phone-angle {
+  perspective: 1100px;
+  padding: 0 10px 17px;
+}
+.air-phone {
+  position: relative;
+  width: 226px;
+  height: 450px;
+  border-radius: 38px;
+  padding: 7px;
+  background: linear-gradient(
+    115deg,
+    #969487,
+    #292d26 22%,
+    #171b16 75%,
+    #646b57
+  );
+  border: 1px solid #9b9d8466;
+  box-shadow:
+    1px 0 0 #737a63,
+    3px 2px 0 #373d30,
+    6px 4px 0 #171b14,
+    16px 26px 30px #0006,
+    0 0 0 1px #0007,
+    0 0 36px var(--air-phone-glow, #b8e5c900);
+  transform: var(--air-phone-pose, rotate(5deg) rotateY(-10deg));
+  transform-origin: center 35%;
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s ease;
+}
+.air-phone::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 8%;
+  right: -12%;
+  bottom: -25px;
+  height: 30px;
+  background: #0007;
+  filter: blur(13px);
+  border-radius: 50%;
+}
+.air-phone-volume,
+.air-phone-power {
+  position: absolute;
+  right: -4px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+  background: linear-gradient(90deg, #79806a, #33382d);
+  box-shadow: 1px 0 1px #0009;
+}
+.air-phone-volume {
+  height: 56px;
+  top: 77px;
+}
+.air-phone-power {
+  height: 28px;
+  top: 152px;
+}
+.air-phone-screen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 30px;
+  background: color-mix(
+    in srgb,
+    var(--air-screen-background, #e9ecd9),
+    #c9ecdf var(--air-phone-tint, 0%)
+  );
+  color: #323d27;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px #111,
+    inset 0 0 3px #0004;
+  transition: background 0.45s;
+}
+.air-phone-camera {
+  position: absolute;
+  z-index: 2;
+  top: 11px;
+  left: calc(50% - 4px);
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle at 40% 35%, #263740 0 15%, #101411 35%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #363d2c22;
+}
+.air-phone-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 13px 14px;
+  font-size: 8px;
+  font-weight: 650;
+}
+.air-phone-status > span:first-child {
+  margin-right: auto;
+}
+.air-battery {
+  display: block;
+  width: 12px;
+  height: 6px;
+  background: #4d593d;
+  border-radius: 1px;
+}
+.air-phone-app {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 16px 30px;
+}
+.air-phone-app h3 {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -1px;
+  margin: 0;
+}
+.air-phone-app p {
+  font-size: 8px;
+  color: #6d785d;
+  margin: 8px 0 24px;
+}
+.air-tap-counter {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 7px 7px 13px;
+  border-radius: 14px;
+  background: #ffffff73;
+  border: 1px solid #8c9c632c;
+}
+.air-tap-counter > span {
+  font-size: 10px;
+  color: #6a7851;
+}
+.air-tap-counter output {
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 550;
+}
+.air-tap-counter button {
+  display: grid;
+  place-items: center;
+  margin-left: auto;
+  width: 44px;
+  height: 44px;
+  color: #f3f6e9;
+  background: #657b3e;
+  border-radius: 10px;
+  box-shadow: 0 2px 3px #26350c20;
+  transition:
+    transform 0.15s,
+    background 0.2s;
+}
+.air-tap-counter button:hover {
+  background: #536832;
+}
+.air-tap-counter button:active {
+  transform: scale(0.91);
+}
+.air-tap-counter button:focus-visible {
+  outline: 2px solid #3a4b26;
+  outline-offset: 3px;
+}
+.air-tap-hint {
+  margin-top: 9px;
+  color: #667352;
+  font-size: 7px;
+}
+.air-phone-toast {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: #4b5d32;
+  font-size: 8px;
+  padding: 8px;
+  margin-top: 15px;
+  border-radius: 8px;
+  background: #fff8;
+  opacity: 0;
+  transform: translateY(5px);
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+}
+.air-phone-toast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.air-phone-home {
+  position: absolute;
+  bottom: 8px;
+  width: 65px;
+  height: 3px;
+  border-radius: 3px;
+  background: #50603b;
+  left: calc(50% - 32px);
+}
+.air-device-caption {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: 8px;
+  color: #d0c9ae;
+}
+.is-reloaded .air-phone-screen {
+  --air-screen-background: #f1e3c9;
+}
+.air-demo-instruction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  font-size: 10px;
+  color: #dbd2ba;
+  margin: 29px 0 0;
+  line-height: 1.8;
+}
+.air-demo-instruction > span {
+  color: #bcb89e;
+}
+.air-spinning {
+  animation: air-spin 0.7s linear infinite;
+}
+@keyframes air-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (max-width: 1050px) {
+  .air-demo-stage {
+    grid-template-columns: minmax(0, 1fr) 70px 226px;
+  }
+  .air-phone {
+    width: 208px;
+    height: 432px;
+  }
+  .air-device-preview .air-hardware-label {
+    font-size: 6px;
+    gap: 6px;
+    letter-spacing: 0.7px;
+  }
+  .air-code {
+    font-size: 9px;
+  }
+
+  .air-terminal {
+    font-size: 8px;
+  }
+}
+@media (max-width: 760px) {
+  .air-demo {
+    margin: 38px -8px 0;
+    padding-bottom: 25px;
+  }
+  .air-demo-stage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .air-code {
+    font-size: 10px;
+  }
+  .air-code > div > span {
+    min-width: 30px;
+  }
+
+  .air-demo-toolbar {
+    font-size: 8px;
+    padding: 0 10px;
+  }
+  .air-wireless {
+    transform: none;
+    margin: 17px auto 24px;
+    width: 160px;
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+  }
+  .air-wireless-track {
+    height: 76px;
+    width: 44px;
+  }
+  .air-wireless-track::before {
+    height: 100%;
+    width: 1px;
+    left: 50%;
+    right: auto;
+    background: repeating-linear-gradient(
+      180deg,
+      #f0d39470 0 3px,
+      transparent 3px 7px
+    );
+  }
+  .air-wireless > span {
+    font-size: 7px;
+    margin: 0;
+  }
+  .air-data-packet {
+    top: 0;
+    left: 20px;
+    width: 4px;
+    height: 7px;
+  }
+  .is-sending .air-data-packet {
+    animation-name: air-transmit-down;
+  }
+  @keyframes air-transmit-down {
+    0% {
+      top: 0;
+      opacity: 0;
+    }
+    15%,
+    85% {
+      opacity: 1;
+    }
+    100% {
+      top: 100%;
+      opacity: 0;
+    }
+  }
+  .air-device-preview .air-hardware-label {
+    font-size: 8px;
+    letter-spacing: 1px;
+    margin-bottom: 23px;
+  }
+  .air-phone {
+    width: 220px;
+    height: 440px;
+    transform: var(--air-phone-pose, rotate(4deg) rotateY(-8deg));
+  }
+  .air-device-caption {
+    font-size: 9px;
+  }
+  .air-demo-instruction {
+    font-size: 9px;
+    max-width: 320px;
+    margin: 24px auto 0;
+  }
+  .air-demo-instruction > span {
+    width: 100%;
+    text-align: center;
+  }
+}
+@media (max-width: 390px) {
+  .air-code {
+    font-size: 8px;
+  }
+  .air-code > div > span {
+    min-width: 24px;
+  }
+
+  .air-demo-toolbar > span {
+    font-size: 7px;
+  }
+  .air-terminal-result {
+    font-size: 7px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .air-demo * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

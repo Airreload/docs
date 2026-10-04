@@ -1,0 +1,40 @@
+{
+  "name": "airreload-docs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "start": "next start",
+    "types:check": "next typegen && tsc --noEmit",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "cn": "^0.3.0",
+    "fumadocs-core": "16.15.18",
+    "fumadocs-mdx": "15.4.6",
+    "fumadocs-ui": "npm:@fumadocs/base-ui@16.15.18",
+    "lucide-react": "^1.47.0",
+    "metal-fx": "^2.0.11",
+    "next": "^16.3.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/mdx": "^2.0.14",
+    "@types/node": "^26.6.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.186.0",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.3.8",
+    "postcss": "^8.5.28",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~6.0.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

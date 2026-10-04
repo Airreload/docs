@@ -1,0 +1,68 @@
+---
+title: Everyday development
+description: Reload, rebuild, and reconnect while you work.
+icon: CodeXml
+---
+
+Keep `airreload run` open and edit your project in your usual editor. Once Flutter attaches, save your changes and use the terminal controls below.
+
+## Terminal controls
+
+| Key | Action |
+| --- | --- |
+| `r` | Hot reload and preserve app state |
+| `R` | Hot restart and reset Dart state |
+| `d` | Detach Flutter |
+| `q` | Quit Flutter |
+| `Ctrl-C` | Stop the Airreload session |
+
+A successful detach or normal quit also ends the session.
+
+## When to rebuild
+
+Dart changes under `lib/` usually hot reload. Use hot restart when you need to rerun initialization or Flutter rejects a reload.
+
+For **assets, dependencies, native code, or build settings**, stop the session, run `airreload run` again, and install the new APK. Also rebuild after updating Airreload's native integration.
+
+## Reconnect
+
+Keep your computer awake and the original CLI session running:
+
+- **Project app closed?** Reopen it. Airreload waits for the app and attaches again.
+- **Go lost its connection?** Return to the same Wi-Fi and tap **Reconnect to computer** in Go. You can also scan **Show reconnect QR** on the computer's pairing page with the same phone.
+
+Go resumes the existing build or downloads the finished APK without rebuilding. The computer must remain at the same network address.
+
+<Callout>
+Restarted the CLI? Scan the new QR and install the new session's APK. Reconnection only works while the original session is running.
+</Callout>
+
+## DevTools
+
+Open the DevTools URL printed by Flutter in your computer's browser once it attaches.
+
+<Accordions>
+<Accordion title="Does Airreload change my project?" id="project-preparation">
+
+Airreload generates its debug integration in a separate session copy and links to your original `lib/` directory. Your source files and FVM configuration stay in place. Other files are copied, which is why assets, native files, and local package changes outside that `lib/` tree need a fresh build.
+
+External Gradle file references are not rewritten for the prepared copy.
+
+</Accordion>
+<Accordion title="Airreload Go settings and downloads" id="airreload-go">
+
+Go offers to open the app after installation. Choose **Always open apps after installation**, or change it later in **Settings → After installation**.
+
+Installed apps appear in **Apps**; validated downloads remain in **History** until you delete them. An old APK cannot connect to a newly started CLI session.
+
+Go accepts pairing QR codes or pairing links only. For manual entry, use the link encoded by the QR, not the computer's QR-page address or a direct APK URL.
+
+</Accordion>
+<Accordion title="Using the local network safely" id="network-and-trust">
+
+Use a trusted development network and keep pairing codes private. Go's pre-build handshake uses local HTTP; the installed app connects through an authenticated TLS tunnel with certificate pinning. Don't expose development ports to the internet.
+
+Airreload produces debug APKs for local development. Use your normal release workflow for production apps.
+
+</Accordion>
+</Accordions>

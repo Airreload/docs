@@ -1,0 +1,128 @@
+---
+title: CLI reference
+description: Commands, build options, and updates.
+icon: Terminal
+---
+
+Run `airreload --help` for all commands, or `airreload help run` for build options.
+
+## Run your app
+
+```bash
+airreload run
+```
+
+Run inside a standalone Flutter Android project. Use [terminal controls](/docs/guides/development#terminal-controls) after Flutter attaches.
+
+<Accordions>
+<Accordion title="Run options" id="run-options">
+
+| Option | Default | Purpose |
+| --- | --- | --- |
+| `--project` | Current directory | Flutter Android app directory |
+| `--target`, `-t` | `lib/main.dart` | Entrypoint under `lib/` |
+| `--flavor` | None | Existing Android product flavor |
+| `--dart-define` | None | Repeatable compile-time definition |
+| `--dart-define-from-file` | None | Repeatable definitions file, relative to the app directory |
+| `--flutter-version` | Automatic | Exact supported Flutter version |
+| `--host` | Detected LAN IPv4 | Computer address reachable by the phone |
+| `--wait-timeout` | `0` | Seconds per pairing/connection/reconnection wait; `0` waits until stopped |
+
+```bash
+airreload run --target lib/main_dev.dart --flavor dev
+airreload run --dart-define=APP_ENV=staging
+airreload run --dart-define-from-file=config/staging.json
+airreload run --project /path/to/app --host 192.168.1.42
+```
+
+Use your actual computer address for `--host`. Quote paths containing spaces. Definitions go to both build and attach; values compiled into an APK should not contain server secrets. Restart the session when changing build options.
+
+</Accordion>
+<Accordion title="Flutter versions and FVM" id="flutter-versions">
+
+Airreload provides Flutter **3.47.5, 3.44.9, 3.41.9, and 3.38.10** as preview SDKs pending manual phone acceptance.
+
+It detects FVM configuration first, then a configured VS Code SDK or Flutter on PATH. An unavailable detected version uses the closest compatible supported release; with no detected version, it picks the latest compatible release. The CLI reports its choice.
+
+To choose an exact version with no fallback:
+
+```bash
+airreload run --flutter-version 3.38.10
+```
+
+Your dependency constraints still apply. SDKs download on demand and are shared in the installation's `sdks/` cache. Your existing Flutter and FVM configuration stay unchanged.
+
+</Accordion>
+</Accordions>
+
+## Check your setup
+
+```bash
+airreload doctor
+airreload version
+```
+
+`doctor` checks basic local tools and managed SDK setup. It does not fully validate Android build tools or test the phone connection. `version` prints your installed CLI version.
+
+## Update
+
+Stop running sessions, then use:
+
+```bash
+airreload update --check  # Check without installing
+airreload update         # Install the available update
+```
+
+Automatic updates support installer-owned macOS Apple Silicon and Windows x64 installations, preserving SDKs and pairing data. On Windows, wait for the separate updater window to finish before running another command.
+
+Update **Airreload Go** separately from its [releases page](https://github.com/Airreload/airreload-go/releases).
+
+<Accordions>
+<Accordion title="Older Windows versions and source checkouts" id="manual-updates">
+
+Windows CLI versions through `0.3.0-beta.4` need the installer directly. Stop sessions first:
+
+```powershell
+& ([scriptblock]::Create((Invoke-WebRequest -UseBasicParsing 'https://raw.githubusercontent.com/Airreload/installer/main/install.ps1').Content)) -Replace -PreserveData -NoPath
+```
+
+For source checkouts, `update --check` reports releases, but `update` will not replace the checkout. Follow its manual pull, dependency, and rebuild guidance.
+
+</Accordion>
+<Accordion title="Source installation (including Linux)" id="source-installation">
+
+Requires Dart 3.13+, Git, and your project's Android build tools:
+
+```bash
+git clone https://github.com/Airreload/cli.git
+cd cli
+dart pub get
+dart compile exe bin/airreload.dart -o bin/airreload
+./bin/airreload run --project /path/to/flutter-app
+```
+
+Keep the executable in `cli/bin`. On Windows, compile to `bin/airreload.exe` and use `.\bin\airreload.exe`.
+
+</Accordion>
+<Accordion title="Installation paths and uninstalling" id="installation-options">
+
+The default location is `~/.airreload` on macOS or `%USERPROFILE%\.airreload` on Windows. Set `AIRRELOAD_INSTALL_ROOT` to another absolute writable path before installing if needed. A shorter path can resolve Windows SDK cache path-limit errors.
+
+For a custom install, PATH options, or removal, follow the [installer instructions](https://github.com/Airreload/installer#install). Its uninstall scripts remove the CLI installation, cached SDKs, and state. Remove Go and project apps separately through Android settings.
+
+</Accordion>
+<Accordion title="Advanced host commands" id="advanced-host-commands">
+
+These commands are for manually managed compatible integrations. Use `run` for the normal Go workflow; its isolated session is separate from workspace host state.
+
+| Command | Purpose |
+| --- | --- |
+| `airreload host --port 9443` | Start the workspace TLS host; `9443` is the default |
+| `airreload status` | Report workspace host/app status; exit `1` if the host is offline |
+| `airreload pair --host 192.168.1.42` | Print host pairing credentials for your LAN IPv4 address |
+| `airreload attach --project /path/to/app` | Attach to an already connected compatible app; optionally pass `--target` |
+
+`pair` exposes sensitive credentials and is not the Go QR workflow. The app must pin the host certificate. `attach` requires matching source and does not install or launch the app. Non-default host ports need compatible companion support.
+
+</Accordion>
+</Accordions>

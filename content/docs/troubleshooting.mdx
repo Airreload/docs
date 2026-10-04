@@ -1,0 +1,74 @@
+---
+title: Troubleshooting
+description: A few checks to get you moving again.
+icon: Wrench
+---
+
+Start with `airreload doctor` and the error shown in your terminal. Then find the issue below.
+
+<Accordions>
+<Accordion title="The terminal cannot find airreload" id="command-not-found">
+
+Open a **new terminal** after installation. If the command is still missing, try `~/.airreload/bin/airreload version` on macOS, or in PowerShell:
+
+```powershell
+& "$env:USERPROFILE\.airreload\bin\airreload.exe" version
+```
+
+Adjust for a custom installation path. If that works, check that the installation's `bin` directory is on PATH.
+
+</Accordion>
+<Accordion title="The phone cannot pair or connect" id="connection">
+
+Keep the computer awake, leave the CLI running, and put both devices on the same trusted network. Check VPN routing, guest Wi-Fi isolation, and local firewall permissions.
+
+If the QR page didn't open, use the **QR page** URL in the terminal on your computer. Go's manual entry needs the QR's **pairing link**, not that page URL.
+
+If the wrong network interface was selected, restart with your computer's reachable LAN IPv4 address:
+
+```bash
+airreload run --host 192.168.1.42
+```
+
+Use your own address and scan the new QR. Allow local connections on the trusted/private network; don't disable your firewall or expose ports publicly.
+
+</Accordion>
+<Accordion title="The build is slow or fails" id="build-failed">
+
+The first run downloads a Flutter SDK and uncached dependencies. Go waits while the build is running, even after ten minutes.
+
+For a failure, read the first relevant Flutter/Gradle error. Check Android SDK licenses, JDK/Gradle compatibility, and dependency constraints. `doctor` does not validate the entire Android build environment.
+
+For an unavailable Flutter version, check [supported releases](/docs/reference/cli#flutter-versions). For a Windows cache-path error, use a [shorter installation path](/docs/reference/cli#installation-options).
+
+</Accordion>
+<Accordion title="Android will not install the APK" id="installation">
+
+Allow **Airreload Go** to install apps from this source, then approve Android's install prompt. Installing Go itself may require permission for your browser or file manager.
+
+If the message says **“Harmful app blocked,”** see the [Play Protect warning and temporary development-device steps](/docs/quickstart#play-protect). That warning is different from the unknown-app installation permission.
+
+Check available storage. If Android reports a signature conflict, use a separate development app ID/flavor, or uninstall the conflicting app only if you're willing to lose its local data.
+
+</Accordion>
+<Accordion title="Installed, but still waiting for the app" id="waiting-for-app">
+
+Open your **project app** and confirm you installed the current session's APK. If you restarted the CLI, scan the new QR and install the new APK.
+
+If only Wi-Fi or the app disconnected, keep the original session running and follow [reconnection steps](/docs/guides/development#reconnect).
+
+</Accordion>
+<Accordion title="My changes do not appear" id="hot-reload">
+
+Save the file, wait for Flutter to attach, and press `r`. Try a visible widget change under `lib/`. Use `R` if it needs fresh initialization.
+
+Assets, dependencies, native files, and code outside the linked `lib/` tree need a [fresh build](/docs/guides/development#when-to-rebuild).
+
+</Accordion>
+</Accordions>
+
+## Still stuck?
+
+Report the problem in [CLI issues](https://github.com/Airreload/cli/issues), [Go issues](https://github.com/Airreload/airreload-go/issues), or [installer issues](https://github.com/Airreload/installer/issues).
+
+Include your CLI/Go versions, computer OS, Android version, selected Flutter version, and relevant error. Remove pairing links, QR codes, tokens, and private project values before sharing logs.

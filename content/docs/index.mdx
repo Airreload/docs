@@ -1,0 +1,38 @@
+---
+title: Why Airreload?
+description: Spend less time connecting your phone and more time building your app.
+icon: House
+---
+
+<DocsIntro />
+
+## The problem: setup gets in the way
+
+You want to see a change on your actual phone. Before you can use hot reload, you need to get a debug build onto it and connect your development tools. That can mean finding a USB cable, enabling developer options, authorizing ADB, or configuring wireless debugging.
+
+That setup interrupts a simple loop: **change your code, see it on your phone, repeat**.
+
+## Our approach: run, scan, reload
+
+Airreload brings building, installation, and connection into one local workflow:
+
+1. **Run `airreload run`** in your Flutter project. The CLI prepares the debug integration and opens a pairing QR.
+2. **Scan with Airreload Go.** Your phone pairs with the computer, the CLI builds a matching APK, and Go downloads it. Approve Android's installation prompt and open your app.
+3. **Keep building.** Airreload connects Flutter to the running app. Edit your code and press `r` to hot reload, or `R` to hot restart. DevTools is available on your computer.
+
+No USB cable, ADB setup, or developer options are needed for this flow. Your computer and phone communicate over the same trusted local network.
+
+## Your project, your workflow
+
+Keep using your editor and your existing Flutter project. Airreload prepares its integration in a separate session copy, so your original source and FVM configuration stay in place. Supported Dart edits under `lib/` can hot reload; assets, dependencies, and native changes still need a rebuild.
+
+Airreload is currently for **Flutter Android development**. It builds debug APKs, and Android stays in control of installation.
+
+<Cards>
+  <Card title="Getting started" href="/docs/quickstart" description="Install, pair your phone, and make your first change." />
+  <Card title="CLI reference" href="/docs/reference/cli" description="Find a command or customize your run." />
+</Cards>
+
+<Callout title="Beta · Android">
+The installer supports macOS Apple Silicon and Windows x64. You'll need an Android 8.0+ phone and a Flutter Android project. See [requirements](/docs/quickstart#before-you-start).
+</Callout>
