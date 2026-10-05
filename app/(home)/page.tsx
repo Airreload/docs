@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { ArrowDown, ArrowUpRight, Zap } from "lucide-react";
 import { ReloadArtwork } from "@/components/reload-artwork";
 import { StartBuildingButton } from "@/components/start-building-button";
+import { CopySetupPrompt } from "@/components/copy-setup-prompt";
 import {
   ReloadDemo,
   InstallCommand,
@@ -134,6 +135,7 @@ export default function HomePage() {
             </span>
           </h2>
           <InstallCommand />
+          <CopySetupPrompt />
         </section>
       </main>
       <footer className="air-footer">

@@ -288,6 +288,56 @@
 .air-button-secondary:hover {
   background: #30312a;
 }
+.air-agent-setup {
+  margin-top: 18px;
+}
+.air-agent-setup-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+}
+.air-landing .air-copy-prompt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 184px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid #ffffff30;
+  border-radius: 6px;
+  background: #10110d80;
+  color: var(--air-text);
+  font: 12px/1.5 ui-monospace, SFMono-Regular, monospace;
+  transition: background 0.2s, border-color 0.2s;
+}
+.air-landing .air-copy-prompt:hover {
+  background: #23231e;
+  border-color: #ffe19480;
+}
+.air-agent-setup-row p {
+  margin: 0;
+  color: #b0b2a5;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.air-setup-prompt-fallback {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid #ffffff30;
+  border-radius: 6px;
+  background: var(--air-bg);
+  color: var(--air-text);
+  font: 12px/1.6 ui-monospace, SFMono-Regular, monospace;
+  resize: vertical;
+}
+.air-setup-prompt-fallback:focus-visible {
+  outline: 2px solid var(--air-accent);
+  outline-offset: 3px;
+}
 
 .air-reload-art {
   position: absolute;
@@ -506,6 +556,9 @@
   .air-install {
     gap: 30px;
     padding: 38px 27px;
+  }
+  .air-agent-setup {
+    margin-top: 0;
   }
 }
 @media (max-width: 760px) {
