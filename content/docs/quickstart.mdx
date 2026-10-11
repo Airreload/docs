@@ -12,13 +12,13 @@ Build on your computer, pair your phone, and open your app. No USB cable, ADB, o
 - Git, [Android build tools](https://docs.flutter.dev/platform-integration/android/setup), and a JDK compatible with your project.
 - An Android 8.0+ phone on the same **trusted local network** as your computer.
 
-Airreload downloads its own Flutter SDK. You don't need to install Flutter or Dart separately. The first run needs internet access for SDKs and uncached dependencies.
+Airreload downloads its own Flutter SDK. You don't need to install Flutter or Dart separately, except on Linux, where you need Dart 3.13+ to build the CLI. The first run needs internet access for SDKs and uncached dependencies.
 
 <Steps>
 <Step>
 ## Install the CLI
 
-<Tabs items={['macOS', 'Windows']}>
+<Tabs items={['macOS', 'Windows', 'Linux']}>
 <Tab value="macOS">
 
 On an **Apple Silicon Mac**, run:
@@ -37,6 +37,21 @@ iwr -UseBasicParsing 'https://raw.githubusercontent.com/Airreload/installer/main
 ```
 
 </Tab>
+<Tab value="Linux">
+
+On **Linux**, build the CLI from source with Dart 3.13+ and Git:
+
+```bash
+mkdir -p ~/airreload && cd ~/airreload
+git clone https://github.com/Airreload/cli.git cli
+cd cli
+dart pub get
+dart compile exe bin/airreload.dart -o bin/airreload
+```
+
+Then [add `airreload` to your shell](/docs/reference/cli#source-installation) (Bash, Zsh, Fish, or another shell). That step also sets `AIRRELOAD_WORKSPACE`, which a source build needs.
+
+</Tab>
 </Tabs>
 
 Open a **new terminal**, then check your installation:
@@ -45,7 +60,7 @@ Open a **new terminal**, then check your installation:
 airreload doctor
 ```
 
-Using Linux? Follow the [source installation](/docs/reference/cli#source-installation).
+On Linux, the `Cache:` line should point to `~/airreload/sdks`.
 
 </Step>
 <Step>
