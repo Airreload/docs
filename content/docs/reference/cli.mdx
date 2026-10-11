@@ -86,22 +86,108 @@ Windows CLI versions through `0.3.0-beta.4` need the installer directly. Stop se
 & ([scriptblock]::Create((Invoke-WebRequest -UseBasicParsing 'https://raw.githubusercontent.com/Airreload/installer/main/install.ps1').Content)) -Replace -PreserveData -NoPath
 ```
 
-For source checkouts, `update --check` reports releases, but `update` will not replace the checkout. Follow its manual pull, dependency, and rebuild guidance.
+For source checkouts, `update --check` reports releases, but `update` will not replace the checkout. [Rebuild it](#source-installation) with `git pull`, `dart pub get`, and `dart compile exe`.
 
 </Accordion>
 <Accordion title="Source installation (including Linux)" id="source-installation">
 
-Requires Dart 3.13+, Git, and your project's Android build tools:
+Linux has no native installer, so you build the CLI once from source. You need Git, your project's Android build tools, and **Dart 3.13+**. Check with `dart --version`; the Dart included with Flutter works.
+
+**1. Build the CLI** in its own folder:
 
 ```bash
-git clone https://github.com/Airreload/cli.git
+mkdir -p ~/airreload && cd ~/airreload
+git clone https://github.com/Airreload/cli.git cli
 cd cli
 dart pub get
 dart compile exe bin/airreload.dart -o bin/airreload
-./bin/airreload run --project /path/to/flutter-app
 ```
 
-Keep the executable in `cli/bin`. On Windows, compile to `bin/airreload.exe` and use `.\bin\airreload.exe`.
+Keep the clone named `cli` inside `~/airreload`. Airreload stores its Flutter SDKs in `~/airreload/sdks` and its pairing data in `~/airreload/cli/.airreload`.
+
+**2. Add `airreload` to your shell.** This adds the CLI to `PATH` and sets `AIRRELOAD_WORKSPACE`, which a source build needs to find its SDK cache and pairing data from any directory. Pick your shell:
+
+<Tabs items={['Bash', 'Zsh', 'Fish', 'Other shells']}>
+<Tab value="Bash">
+
+```bash
+cat > ~/airreload/env <<'EOF'
+export AIRRELOAD_WORKSPACE="$HOME/airreload"
+case ":$PATH:" in
+  *":$HOME/airreload/cli/bin:"*) ;;
+  *) export PATH="$HOME/airreload/cli/bin:$PATH" ;;
+esac
+EOF
+grep -qxF '. "$HOME/airreload/env"' ~/.bashrc || echo '. "$HOME/airreload/env"' >> ~/.bashrc
+. ~/airreload/env
+```
+
+</Tab>
+<Tab value="Zsh">
+
+```zsh
+cat > ~/airreload/env <<'EOF'
+export AIRRELOAD_WORKSPACE="$HOME/airreload"
+case ":$PATH:" in
+  *":$HOME/airreload/cli/bin:"*) ;;
+  *) export PATH="$HOME/airreload/cli/bin:$PATH" ;;
+esac
+EOF
+grep -qxF '. "$HOME/airreload/env"' ~/.zshrc || echo '. "$HOME/airreload/env"' >> ~/.zshrc
+. ~/airreload/env
+```
+
+</Tab>
+<Tab value="Fish">
+
+```fish
+set -Ux AIRRELOAD_WORKSPACE ~/airreload
+fish_add_path ~/airreload/cli/bin
+```
+
+Both settings are saved for future Fish sessions and apply to the current one.
+
+</Tab>
+<Tab value="Other shells">
+
+For `sh`, `dash`, `ksh`, or another POSIX shell, use the **Bash** commands and replace `~/.bashrc` with your shell's startup file, such as `~/.profile` or `~/.kshrc`.
+
+For any other shell, set `AIRRELOAD_WORKSPACE` to `~/airreload` and add `~/airreload/cli/bin` to `PATH` in its configuration.
+
+</Tab>
+</Tabs>
+
+These commands apply to your current terminal and future ones. Running them again does not add duplicate entries.
+
+**3. Check your setup:**
+
+```bash
+airreload doctor
+```
+
+The `Cache:` line should point to `~/airreload/sdks`. If it shows another directory, `AIRRELOAD_WORKSPACE` isn't set in that shell; repeat step 2.
+
+**4. Run your app** from your Flutter project:
+
+```bash
+cd /path/to/flutter-app
+airreload run
+```
+
+To install somewhere other than `~/airreload`, replace that path in every step.
+
+**Update** a source installation by rebuilding it. Stop running sessions first:
+
+```bash
+cd ~/airreload/cli
+git pull
+dart pub get
+dart compile exe bin/airreload.dart -o bin/airreload
+```
+
+**Uninstall** by deleting `~/airreload` and removing the `. "$HOME/airreload/env"` line from your shell's startup file. In Fish, run `set -Ue AIRRELOAD_WORKSPACE` and `set -U fish_user_paths (string match -v ~/airreload/cli/bin $fish_user_paths)`.
+
+On Windows, compile to `bin/airreload.exe` and run `.\bin\airreload.exe` from the `cli` folder.
 
 </Accordion>
 <Accordion title="Installation paths and uninstalling" id="installation-options">

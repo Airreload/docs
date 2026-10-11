@@ -300,9 +300,9 @@ export function ReloadDemo() {
 
 const commands = {
   linux: [
-    "git clone https://github.com/Airreload/cli.git &&",
-    "cd cli &&",
-    "dart pub get &&",
+    "mkdir -p ~/airreload && cd ~/airreload &&",
+    "git clone https://github.com/Airreload/cli.git cli &&",
+    "cd cli && dart pub get &&",
     "dart compile exe bin/airreload.dart -o bin/airreload &&",
     "./bin/airreload doctor",
   ].join("\n"),
@@ -397,7 +397,7 @@ export function InstallCommand() {
           : copied
             ? "Copied. Your terminal is up next."
             : platform === "linux"
-              ? "Requires Dart 3.13+ and Git. Keep the executable in cli/bin; see the source guide to run your project."
+              ? "Requires Dart 3.13+ and Git. Next, follow the source guide to add airreload to your shell."
               : "Then open your Flutter project and run airreload run."}
       </div>
       <div className="air-install-bottom">
