@@ -2,6 +2,25 @@
 @import "fumadocs-ui/css/neutral.css";
 @import "fumadocs-ui/css/preset.css";
 
+.analytics-preference {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--color-fd-border);
+  color: var(--color-fd-muted-foreground);
+  font: 0.8rem/1.6 var(--font-sans);
+}
+.analytics-preference details { max-width: 48rem; margin-inline: auto; }
+.analytics-preference summary { cursor: pointer; width: fit-content; }
+.analytics-preference p { margin-block: 0.75rem; }
+.analytics-preference button {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0.5rem;
+  color: var(--color-fd-foreground);
+  cursor: pointer;
+}
+.analytics-preference button:focus-visible,
+.analytics-preference summary:focus-visible { outline: 2px solid var(--color-fd-ring); outline-offset: 3px; }
+
 html {
   scrollbar-gutter: stable;
 }

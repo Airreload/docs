@@ -1,6 +1,9 @@
 import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Suspense } from "react";
+import { Analytics, AnalyticsPreference } from "@/components/analytics";
+import { source } from "@/lib/source";
 import "./global.css";
 
 const inter = localFont({
@@ -20,7 +23,13 @@ export default function Layout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen">
-        <RootProvider theme={{ defaultTheme: "dark" }}>{children}</RootProvider>
+        <RootProvider theme={{ defaultTheme: "dark" }}>
+          <Suspense fallback={null}>
+            <Analytics pages={source.getPages().map((page) => page.url)} />
+          </Suspense>
+          {children}
+          <AnalyticsPreference />
+        </RootProvider>
       </body>
     </html>
   );

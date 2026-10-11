@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { trackCopy } from "@/lib/analytics";
 import {
   ArrowRight,
   Check,
@@ -325,6 +326,7 @@ export function InstallCommand() {
   async function copy() {
     try {
       await navigator.clipboard.writeText(commands[platform]);
+      trackCopy("web_install_command_copied", platform);
       setCopied(true);
       setCopyError(false);
       timer.current = setTimeout(() => setCopied(false), 2000);
