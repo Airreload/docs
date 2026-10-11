@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
+import { trackCopy } from "@/lib/analytics";
 
 function setupPrompt(origin: string) {
   return `Help me set up Airreload in my Flutter project so I can build, install, and hot reload my Android app over Wi-Fi.
@@ -27,6 +28,7 @@ export function CopySetupPrompt() {
     setStatus("copying");
     try {
       await navigator.clipboard.writeText(prompt);
+      trackCopy("web_setup_prompt_copied");
       setStatus("copied");
       setManualPrompt("");
     } catch {

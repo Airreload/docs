@@ -7,7 +7,8 @@
     "dev": "next dev",
     "start": "next start",
     "types:check": "next typegen && tsc --noEmit",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --test test/*.test.mjs"
   },
   "dependencies": {
     "cn": "^0.3.0",
